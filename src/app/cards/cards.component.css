@@ -1,0 +1,19 @@
+.card {
+    width: 95%;
+    margin: 20px auto auto auto;
+  }
+  
+.expandable-content {
+  overflow: hidden;
+}
+.languajes {
+  display: inline;
+}
+h1 {
+  display: inline;
+  margin-right: 30px;
+}
+.header {
+  width: 95%;
+  margin: 20px auto auto auto;
+}

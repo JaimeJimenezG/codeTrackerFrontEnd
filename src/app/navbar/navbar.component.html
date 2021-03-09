@@ -1,0 +1,40 @@
+<!--Navbar-->
+<mdb-navbar *ngIf="isLoggedIn()" SideClass="navbar navbar-expand-lg navbar-dark special-color lighten-1" [containerInside]="false">
+
+    <!-- Navbar brand -->
+    <mdb-navbar-brand><a class="navbar-brand" ><img width="35px" src="../assets/logo.png" alt="logo"></a></mdb-navbar-brand>
+  
+    <!-- Collapsible content -->
+    <links>
+  
+      <!-- Links -->
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link waves-light" routerLink="/projects" routerLinkActive="active" mdbWavesEffect>Projects<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link waves-light" >IP: {{ ipAddress }}</span>
+        </li>  
+      </ul>
+      <!-- Links -->
+      <ul class="navbar-nav ml-auto nav-flex-icons">
+        
+        <li class="nav-item">
+          <a class="nav-link">
+            <div class="btn-group" mdbDropdown>
+              <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+              <mdb-icon fas icon="user" ></mdb-icon></a>
+              <div class="dropdown-menu dropdown-menu-right dropdown-primary">
+                <a routerLink="{{idUser}}" routerLinkActive="active" class="dropdown-item waves-light" mdbWavesEffect>My account</a>
+                <a class="dropdown-item waves-light" mdbWavesEffect (click)="logout()">Log out</a>
+              </div>
+            </div>
+          </a>
+        </li>
+        
+      </ul>
+    </links>
+    <!-- Collapsible content -->
+  
+  </mdb-navbar>
+  <!--/.Navbar-->

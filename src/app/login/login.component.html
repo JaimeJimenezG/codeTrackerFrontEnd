@@ -1,0 +1,27 @@
+<div class="wrapped">
+  <div class="login">
+    <img width="350px" src="../../assets/logo.png" alt="logo" srcset="">
+    <form
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+    >
+    <div class="form__group field">
+      <input type="input"  [(ngModel)]="form.username" class="form__field" #username="ngModel" placeholder="Username" name="username" id='username' required />
+      <label for="username" class="form__label">Username</label>
+    </div><br>
+    <div class="form__group field">
+      <input [(ngModel)]="form.password" type="password" #password="ngModel" class="form__field" placeholder="Password" name="password" id='password' required />
+      <label for="password" class="form__label">Password</label>
+    </div>
+    <div class="submit-div">
+      <button class="submit" (click)="this.login()">Login</button>
+      <div class="loader active" *ngIf="loginClick">
+          <span *ngIf="isLoggedIn == true"><img src="../../assets/check.png" alt="logo"></span>
+          <span *ngIf="isLoggedIn == false"><img src="../../assets/close.png" alt="logo"></span>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
