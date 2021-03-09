@@ -1,3 +1,5 @@
+# Keep in mind this is a very early relase of teh project
+
 # Frontend
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.2.
