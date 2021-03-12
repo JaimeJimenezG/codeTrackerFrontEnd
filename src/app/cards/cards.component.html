@@ -13,7 +13,7 @@
       </div>
       <div [@bodyExpansion]="state[i]" class="expandable-content">
         <div style="width: 500px; display: inline-block">
-          <div echarts [options]="options" [merge]="updateOptions"></div>
+          <div echarts [options]="options[0]" [merge]="updateOptions"></div>
         </div>
         <div style="display: inline;" *ngFor="let languaje of project.languajes; index as o">
           {{languaje}}
