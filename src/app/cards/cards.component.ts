@@ -3,6 +3,7 @@ import { Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { Observable, zip } from 'rxjs';
 import { GetProjectsService } from '../service/get-projects.service';
 import { GetDataProjectsService } from "../service/get-data-projects.service";
+import '@taeuk-gang/chartjs-plugin-streaming';
 
 @Component({
   selector: 'app-cards',
@@ -18,66 +19,61 @@ import { GetDataProjectsService } from "../service/get-data-projects.service";
   ]
 })
 
-
-export class CardsComponent implements OnInit, OnDestroy {
+export class CardsComponent implements OnInit {
   title = 'my-app';
   projects
-  dataProject
+  public dataProject
   allProjects
   constructor(private getProjects: GetProjectsService, getDataProjects: GetDataProjectsService) {
     this.projects = getProjects.resolveItems();
     this.dataProject = getDataProjects;
   }
+
+
+  datasets: any[] = [[{
+    data: [],
+    label: 'Dataset 1',
+    lineTension: 0,
+    borderDash: [8, 4]
+  }, {
+
+    data: [],
+    label: 'Dataset 2',
+    lineTension: 0,
+    borderDash: [8, 4]
+  }],
+  [{
+    data: [],
+    label: 'Dataset 3',
+    lineTension: 0,
+    borderDash: [8, 4]
+  }, {
+
+    data: [],
+    label: 'Dataset 4',
+    lineTension: 0,
+    borderDash: [8, 4]
+  }],
+  [{
+    data: [],
+    label: 'Dataset 3',
+    lineTension: 0,
+    borderDash: [8, 4]
+  }, {
+
+    data: [],
+    label: 'Dataset 4',
+    lineTension: 0,
+    borderDash: [8, 4]
+  }],
+];
+  options
+  
+
   disabled = false;
   ShowFilter = false;
   limitSelection = false;
   state = []
-  options
-  option = {
-    title: {
-      text: 'CPU use (single-threded)'
-    },
-    tooltip: {
-      trigger: 'axis',
-      formatter: (params) => {
-        params = params[0];
-        const date = new Date(params.name);
-        return "CPU : " + params.value[1];
-      },
-      axisPointer: {
-        animation: false
-      }
-    },
-    xAxis: {
-      type: 'time',
-      splitLine: {
-        show: false
-      },
-      show: false,
-    },
-    yAxis: {
-      type: 'value',
-      boundaryGap: [0, '100%'],
-      splitLine: {
-        show: true
-      },
-      min: 0,
-      max: 100
-    },
-    series: [{
-      name: 'Mocking Data',
-      type: 'line',
-      showSymbol: false,
-      hoverAnimation: false,
-    }]
-  };
-  updateOptions: any;
-
-  private oneDay = 24 * 3600 * 1000;
-  private now: Date;
-  private value;
-  private data;
-  private timer: any;
 
   
   dropdownList = [];
@@ -89,70 +85,29 @@ export class CardsComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit(): void {
-    this.constructDataArrays()
-    this.dataToOptions()
-    // generate some random testing data:
-    this.now = new Date();
-    console.log(this.data)
-    for (let i = 0; i < 100; i++) {
-      this.data.push(this.getUsage('java',0));
-    }
 
-    // initialize chart options:
-
-    // Mock dynamic data:
-    this.timer = setInterval(() => {
-      for (let i = 0; i < 5; i++) {
-        this.data.shift();
-        this.data.push(this.getUsage('java', 0));
-      }
-      // update series data:
-      this.updateOptions = {
-        series: [{
-          data: this.data
-        }]
-      };
-    }, 1000);
-  }
-
-  ngOnDestroy() {
-    clearInterval(this.timer);
-  }
-
-  getUsage(processName, type) {
-    this.now = new Date(this.now.getTime() + this.oneDay);
-    this.dataProject.getData().subscribe(val => {
+    this.options = {
       
-      this.value = parseInt(val['response'][processName][type])
-    })  
-    return {
-      name: this.now.toString(),
-      value: [
-        [this.now.getFullYear(), this.now.getMonth() + 1, this.now.getDate()].join('/'),
-        this.value
-      ]
+      scales: {
+        xAxes: [{
+          type: 'realtime',
+          realtime: {
+            onRefresh: function(chart: any) {
+                chart.data.datasets.forEach(function(dataset: any) { 
+                console.log()
+                dataset.data.push({
+                  x: Date.now(),
+                  y: Math.random()
+                });
+              });
+            },
+            delay: 2000
+          }
+        }]
+      }
     };
   }
-  dataToOptions() {
-    var count = 0;
-    var options=[]
-    this.projects.forEach(element => {
-      element.forEach(element => {
-        options[count] = this.option
-        options[count].series.data = this.data
-        count++
-      });
-    });
-    this.options = options
-  }
-  constructDataArrays(){
-    var count = 0;
-    this.data = []
-    this.projects.forEach(element => {
-      element.forEach(element => {
-        this.data[count] = []
-        count++
-      })
-    })
+  getDatasets() {
+    return 2
   }
 }

@@ -12,9 +12,14 @@
         {{project.desc}}
       </div>
       <div [@bodyExpansion]="state[i]" class="expandable-content">
-        <div style="width: 500px; display: inline-block">
-          <div echarts [options]="options[0]" [merge]="updateOptions"></div>
-        </div>
+          <div style="width: 500px;">
+            <canvas
+              baseChart
+              [chartType]="'line'"
+              [datasets]="datasets[i]"
+              [options]="options">
+            </canvas>
+          </div>
         <div style="display: inline;" *ngFor="let languaje of project.languajes; index as o">
           {{languaje}}
         </div>
