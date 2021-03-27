@@ -22,51 +22,15 @@ import '@taeuk-gang/chartjs-plugin-streaming';
 export class CardsComponent implements OnInit {
   title = 'my-app';
   projects
-  public dataProject
-  allProjects
+  dataProject
+  datasets: Array<any> = []
   constructor(private getProjects: GetProjectsService, getDataProjects: GetDataProjectsService) {
     this.projects = getProjects.resolveItems();
-    this.dataProject = getDataProjects;
+    this.dataProject = getDataProjects.getData();
+    this.datasets = this.getDatasets();
   }
 
 
-  datasets: any[] = [[{
-    data: [],
-    label: 'Dataset 1',
-    lineTension: 0,
-    borderDash: [8, 4]
-  }, {
-
-    data: [],
-    label: 'Dataset 2',
-    lineTension: 0,
-    borderDash: [8, 4]
-  }],
-  [{
-    data: [],
-    label: 'Dataset 3',
-    lineTension: 0,
-    borderDash: [8, 4]
-  }, {
-
-    data: [],
-    label: 'Dataset 4',
-    lineTension: 0,
-    borderDash: [8, 4]
-  }],
-  [{
-    data: [],
-    label: 'Dataset 3',
-    lineTension: 0,
-    borderDash: [8, 4]
-  }, {
-
-    data: [],
-    label: 'Dataset 4',
-    lineTension: 0,
-    borderDash: [8, 4]
-  }],
-];
   options
   
 
@@ -84,21 +48,33 @@ export class CardsComponent implements OnInit {
     this.state[idCard] = this.state[idCard] === 'collapsed' ? 'expanded' : 'collapsed';
   }
   
+  getNewData() {
+    console.log(1)
+    return { x: Date.now(),y: Math.random()}
+  }
+
   ngOnInit(): void {
+    console.log(this.datasets)
+    for (var i = 0; i< 100; i++ ) {
+      this.state.push("collapsed")
+    }
+
+    function getNewData(this) {
+      console.log(this)
+      return { x: Date.now(),y: Math.random()}
+    }
+    
 
     this.options = {
-      
       scales: {
         xAxes: [{
           type: 'realtime',
           realtime: {
             onRefresh: function(chart: any) {
-                chart.data.datasets.forEach(function(dataset: any) { 
-                console.log()
-                dataset.data.push({
-                  x: Date.now(),
-                  y: Math.random()
-                });
+              var data = getNewData()
+
+              chart.data.datasets.forEach(function(dataset: any) { 
+                dataset.data.push(data);
               });
             },
             delay: 2000
@@ -108,6 +84,15 @@ export class CardsComponent implements OnInit {
     };
   }
   getDatasets() {
-    return 2
+    console.log(this.state)
+    this.dataProject.subscribe(data => {
+        for (let key in data.response) {
+          this.datasets.push([{ data: [{ x: Date.now(), y: data.response[key]["cpuUsage"] }], label: data.response[key]["process"]+"Cpu", lineTension: 0, borderDash: [8, 4] },{ data: [{ x: Date.now(), y: data.response[key]["cpuUsage"] }], label: data.response[key]["process"]+"Ram", lineTension: 0, borderDash: [8, 4] }])
+        }
+      })
+      this.dataProject.forEach(element => {
+        console.log(element.response)
+      });
+      return this.datasets
   }
 }
