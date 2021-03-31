@@ -25,13 +25,18 @@ export class CardsComponent implements OnInit {
   title = 'my-app';
   projects
   dataProject
-  datasets: Array<any> = []
+  datasets = []
   constructor(private getProjects: GetProjectsService, getDataProjects: GetDataProjectsService) {
     this.projects = getProjects.resolveItems();
     this.dataProject = getDataProjects.getData();
     this.datasets = this.getDatasets();
   }
 
+  projectsStates = []
+  processStates = []
+
+  dropdownList = [];
+  dropdownSettings = {};
 
   options = {
     scales: {
@@ -55,27 +60,19 @@ export class CardsComponent implements OnInit {
       }]
     }
   };
-  
-
-  disabled = false;
-  ShowFilter = false;
-  limitSelection = false;
-  state = []
-
-  
-  dropdownList = [];
-  selectedItems = [];
-  dropdownSettings: any = {};
-
-  toggle(idCard): void {
-    this.state[idCard] = this.state[idCard] === 'collapsed' ? 'expanded' : 'collapsed';
-  }
 
   ngOnInit(): void {
-    for (var i = 0; i< 100; i++ ) {
-      this.state.push("collapsed")
-    }
+    
   }
+
+  toggleProjects(idCard): void {
+    this.projectsStates[idCard] = this.projectsStates[idCard] === 'collapsed' ? 'expanded' : 'collapsed';
+  }
+  
+  toggleProcess(idCard): void {
+    this.processStates[idCard] = this.processStates[idCard] === 'collapsed' ? 'expanded' : 'collapsed';
+  }
+
   getDatasets() {
     this.dataProject.subscribe(data => {
         for (let key in data.response) {

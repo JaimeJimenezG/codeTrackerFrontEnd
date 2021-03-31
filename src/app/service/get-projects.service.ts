@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class GetProjectsService {
   idUser = JSON.parse(sessionStorage.getItem('auth-user'))["id"];
-  private readonly URL = 'http://127.0.0.1:5000/projects/'+this.idUser; // id de usuario cambiar !!!!!!!!!!!!!
+  private readonly URL = 'http://192.168.1.22:5000/projects/'+this.idUser; // id de usuario cambiar !!!!!!!!!!!!!
   constructor(private http: HttpClient) { }
   resolveItems(): Observable<any> {
     return this.http.get(this.URL);

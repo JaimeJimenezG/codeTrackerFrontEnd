@@ -10,7 +10,7 @@ export class GetDataProjectsService {
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
-    var URL = 'http://127.0.0.1:5000/project/GetStates/'; 
+    var URL = 'http://192.168.1.22:5000/project/GetStates/'; 
     return this.http.get(URL);
   }
 

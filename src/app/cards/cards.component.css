@@ -2,13 +2,18 @@
     width: 95%;
     margin: 20px auto auto auto;
   }
-.process-card {
-  width: 23%;
-  margin: 15px 15px 15px 15px;
-  display: inline-block;
-  vertical-align: top;
+.processContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap:wrap;
 }
-.expandable-content {
+.processCard {
+  display: inline-block;
+  min-width: 550px;
+  margin: 20px auto auto auto;
+}
+.expandableContent {
   overflow: hidden;
 }
 .languajes {
@@ -21,4 +26,7 @@ h1 {
 .header {
   width: 95%;
   margin: 20px auto auto auto;
+}
+.matTittle{
+  max-width: 200px !important;
 }

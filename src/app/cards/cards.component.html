@@ -1,61 +1,18 @@
 <div class="header">
   <h1>Projects</h1> <button size="md" type="button" mdbBtn color="dark" (click)="basicModal.show()" mdbWavesEffect>New</button>
 </div>
-
-<!-- <mat-card *ngFor='let project of projects | async; index as i' class="card">
-    <mat-card-header>
-      <mat-card-title>{{project.name}}</mat-card-title>
-      <mat-card-subtitle>{{project.ownersNames}}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="languajes" >
-        {{project.desc}}
-      </div>
-      <div [@bodyExpansion]="state[i]" class="expandable-content">
-          <div style="width: 500px;">
-            <canvas
-              baseChart
-              [chartType]="'line'"
-              [datasets]="datasets[i]"
-              [options]="options">
-            </canvas>
-          </div>
-        <div style="display: inline;" *ngFor="let languaje of project.languajes; index as o">
-          {{languaje}}
-        </div>
-      </div>
-    <mat-divider>
-    </mat-divider>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button (click)="toggle(i)" color="primary">EXPAND</button>
-    </mat-card-actions>
-  </mat-card> -->
-
- <!--<mat-card *ngFor='let process of datasets index as i' class="process-card">
-    <mat-card-header>
-      
-    </mat-card-header>
-    <mat-card-content>
-      
-    <mat-divider>
-    </mat-divider>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button (click)="toggle(i)" color="primary">EXPAND</button>
-    </mat-card-actions>
-  </mat-card>-->
-  <mat-accordion *ngFor='let process of datasets index as i' class="process-card">
-   <mat-expansion-panel (opened)="state[i] = 'expanded'"
-                       (closed)="state[i] = 'collapsed'">
+<mat-accordion *ngFor='let project of projects | async; index as i' class="card">
+  <mat-expansion-panel (opened)="projectsStates[i] = 'expanded'"
+                      (closed)="projectsStates[i] = 'collapsed'">
     <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-card-title>{{process[0].processName}}</mat-card-title>
+      <mat-panel-title class="matTittle">
+        <mat-card-title>{{project.name}}</mat-card-title>
       </mat-panel-title>
       <mat-panel-description>
+        {{project.desc}}
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <div *ngIf="state[i] == 'expanded'" [@bodyExpansion]="state[i]" class="expandable-content">
+    <div *ngIf="projectsStates[i] == 'expanded'" [@bodyExpansion]="projectsStates[i]" class="expandable-content">
       <div style="width: 500px;">
         <canvas
           baseChart
@@ -68,38 +25,66 @@
   </mat-expansion-panel>
 </mat-accordion>
 
+<div class="header">
+  <h1>Process</h1>
+</div>
+<div class="processContainer">
+  <mat-accordion *ngFor='let process of datasets index as i' class="processCard">
+    <mat-expansion-panel (opened)="processStates[i] = 'expanded'"
+                        (closed)="processStates[i] = 'collapsed'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-card-title>{{process[0].processName}}</mat-card-title>
+        </mat-panel-title>
+        <mat-panel-description>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *ngIf="processStates[i] == 'expanded'" [@bodyExpansion]="processStates[i]" class="expandable-content">
+        <div style="width: 500px;">
+          <canvas
+            baseChart
+            [chartType]="'line'"
+            [datasets]="datasets[i]"
+            [options]="options">
+          </canvas>
+        </div>
+    </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
 
 <!-- MODAL NEW PROJECT-->
-  <div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
-            <span aria-hidden="true">×</span>
-          </button>
-          <h4 class="modal-title w-100" id="myModalLabel">New project</h4>
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">New project</h4>
+      </div>
+      <div class="modal-body">
+        <div class="md-form">
+          <input mdbInput type="text" class="form-control">
+          <label for="form1" class="">Name</label>
         </div>
-        <div class="modal-body">
-          <div class="md-form">
-            <input mdbInput type="text" class="form-control">
-            <label for="form1" class="">Name</label>
-          </div>
-          <div class="md-form">
-            <input mdbInput type="text" class="form-control">
-            <label for="form1" class="">Path</label>
-          </div>
-          <div class="md-form">
-            <input mdbInput type="text" class="form-control">
-            <label for="form1" class="">Description</label>
-          </div>
-          <ng-multiselect-dropdown [placeholder]="'Pick code languajes'"
-                                 [settings]="dropdownSettings"
-                                 [data]="dropdownList"
-                                 name="dropList">
-        </ng-multiselect-dropdown>
+        <div class="md-form">
+          <input mdbInput type="text" class="form-control">
+          <label for="form1" class="">Path</label>
         </div>
-        <div class="modal-footer">
-          <button type="button" mdbBtn color="success" class="relative waves-light" mdbWavesEffect>Save changes</button>
+        <div class="md-form">
+          <input mdbInput type="text" class="form-control">
+          <label for="form1" class="">Description</label>
         </div>
+        <ng-multiselect-dropdown [placeholder]="'Pick code languajes'"
+                                [settings]="dropdownSettings"
+                                [data]="dropdownList"
+                                name="dropList">
+      </ng-multiselect-dropdown>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="success" class="relative waves-light" mdbWavesEffect>Save changes</button>
       </div>
     </div>
+  </div>
+</div>
