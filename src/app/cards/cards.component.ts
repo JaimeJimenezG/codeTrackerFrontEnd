@@ -4,6 +4,8 @@ import { Observable, zip } from 'rxjs';
 import { GetProjectsService } from '../service/get-projects.service';
 import { GetDataProjectsService } from "../service/get-data-projects.service";
 import '@taeuk-gang/chartjs-plugin-streaming';
+import { ChartsModule } from 'angular-bootstrap-md';
+import { ChartView } from 'echarts';
 
 @Component({
   selector: 'app-cards',
@@ -31,7 +33,28 @@ export class CardsComponent implements OnInit {
   }
 
 
-  options
+  options = {
+    scales: {
+      xAxes: [{
+        type: 'realtime',
+        realtime: {
+          onRefresh: (chart) => {
+            chart.data.datasets.forEach((dataset: any) => {
+              this.dataProject.subscribe(data => {
+                for (let key in data.response) {
+                  if (dataset.id == key+'Ram') {
+                    dataset.data.push({ x: Date.now(), y: data.response[key]["memoryUsage"]})
+                  } else if(dataset.id == key+'Cpu')
+                  dataset.data.push({ x: Date.now(), y: data.response[key]["cpuUsage"]})
+                }
+              })
+            });
+          },
+          delay: 2000
+        }
+      }]
+    }
+  };
   
 
   disabled = false;
@@ -47,51 +70,19 @@ export class CardsComponent implements OnInit {
   toggle(idCard): void {
     this.state[idCard] = this.state[idCard] === 'collapsed' ? 'expanded' : 'collapsed';
   }
-  
-  getNewData() {
-    console.log(1)
-    return { x: Date.now(),y: Math.random()}
-  }
 
   ngOnInit(): void {
-    console.log(this.datasets)
     for (var i = 0; i< 100; i++ ) {
       this.state.push("collapsed")
     }
-
-    function getNewData(this) {
-      console.log(this)
-      return { x: Date.now(),y: Math.random()}
-    }
-    
-
-    this.options = {
-      scales: {
-        xAxes: [{
-          type: 'realtime',
-          realtime: {
-            onRefresh: function(chart: any) {
-              var data = getNewData()
-
-              chart.data.datasets.forEach(function(dataset: any) { 
-                dataset.data.push(data);
-              });
-            },
-            delay: 2000
-          }
-        }]
-      }
-    };
   }
   getDatasets() {
-    console.log(this.state)
     this.dataProject.subscribe(data => {
         for (let key in data.response) {
-          this.datasets.push([{ data: [{ x: Date.now(), y: data.response[key]["cpuUsage"] }], label: data.response[key]["process"]+"Cpu", lineTension: 0, borderDash: [8, 4] },{ data: [{ x: Date.now(), y: data.response[key]["cpuUsage"] }], label: data.response[key]["process"]+"Ram", lineTension: 0, borderDash: [8, 4] }])
+          this.datasets.push([{ data: [{ x: Date.now(), y: data.response[key]["cpuUsage"] }], processName: data.response[key]["process"], id: data.response[key]["process"]+"Cpu",  label: 'Cpu usage', lineTension: 0, borderDash: [8, 4] },{ data: [{ x: Date.now(), y: data.response[key]["memoryUsage"] }], processName: data.response[key]["process"], id: data.response[key]["process"]+"Ram", label: 'Ram usage', lineTension: 0, borderDash: [8, 4] }])
         }
       })
       this.dataProject.forEach(element => {
-        console.log(element.response)
       });
       return this.datasets
   }

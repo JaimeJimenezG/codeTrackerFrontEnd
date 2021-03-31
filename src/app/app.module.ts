@@ -18,6 +18,7 @@ import { JwtModule } from "@auth0/angular-jwt";
 import { UserComponent } from './user/user.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { ChartsModule } from 'ng2-charts';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -37,6 +38,7 @@ export function tokenGetter() {
     NavbarModule,
     WavesModule,
     ButtonsModule,
+    MatExpansionModule,
     NgMultiSelectDropDownModule.forRoot(),
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,

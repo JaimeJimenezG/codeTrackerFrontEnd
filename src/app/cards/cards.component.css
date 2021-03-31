@@ -2,7 +2,12 @@
     width: 95%;
     margin: 20px auto auto auto;
   }
-  
+.process-card {
+  width: 23%;
+  margin: 15px 15px 15px 15px;
+  display: inline-block;
+  vertical-align: top;
+}
 .expandable-content {
   overflow: hidden;
 }
