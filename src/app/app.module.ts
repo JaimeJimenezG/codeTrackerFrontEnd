@@ -19,6 +19,7 @@ import { UserComponent } from './user/user.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { ChartsModule } from 'ng2-charts';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {ReactiveFormsModule} from "@angular/forms";
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -33,6 +34,7 @@ export function tokenGetter() {
     UserComponent
   ],
   imports: [
+    ReactiveFormsModule,
     AppRoutingModule,
     CollapseModule,
     NavbarModule,

@@ -1,11 +1,8 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Component, Input, OnDestroy, OnInit} from '@angular/core';
-import { Observable, zip } from 'rxjs';
-import { GetProjectsService } from '../service/get-projects.service';
-import { GetDataProjectsService } from "../service/get-data-projects.service";
+import { Component, OnInit} from '@angular/core';
+import { ProjectsService } from '../service/projects.service';
 import '@taeuk-gang/chartjs-plugin-streaming';
-import { ChartsModule } from 'angular-bootstrap-md';
-import { ChartView } from 'echarts';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-cards',
@@ -23,17 +20,26 @@ import { ChartView } from 'echarts';
 
 export class CardsComponent implements OnInit {
   title = 'my-app';
+
   projects
-  dataProject
   datasets = []
-  constructor(private getProjects: GetProjectsService, getDataProjects: GetDataProjectsService) {
-    this.projects = getProjects.resolveItems();
-    this.dataProject = getDataProjects.getData();
-    this.datasets = this.getDatasets();
+  projectService
+  constructor(projectService: ProjectsService) {
+    this.projectService = projectService;
   }
 
   projectsStates = []
   processStates = []
+  projectsIDs = {}
+
+
+  form = new FormGroup({
+    "name": new FormControl("", Validators.required),
+    "path": new FormControl("", Validators.required),
+    "desc": new FormControl("", Validators.required),
+    "procesName": new FormControl("", Validators.required),
+    "workspace": new FormControl("", Validators.required),
+  });
 
   dropdownList = [];
   dropdownSettings = {};
@@ -45,7 +51,7 @@ export class CardsComponent implements OnInit {
         realtime: {
           onRefresh: (chart) => {
             chart.data.datasets.forEach((dataset: any) => {
-              this.dataProject.subscribe(data => {
+              this.projectService.getData().subscribe(data => {
                 for (let key in data.response) {
                   if (dataset.id == key+'Ram') {
                     dataset.data.push({ x: Date.now(), y: data.response[key]["memoryUsage"]})
@@ -62,7 +68,25 @@ export class CardsComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    
+    this.projects = this.projectService.resolveItems();
+    this.datasets = this.getDatasets();
+    this.getIdOfProces()
+  }
+
+  getIdOfProces(){
+    this.projectService.resolveItems().forEach(project => {
+      project.forEach(proces => {
+        this.projectService.getData().subscribe(data => {
+          var id = 0
+          for (let key in data.response) {
+            if (data.response[key].process == proces.procesName) {
+              this.projectsIDs[proces.procesName] = id
+            }
+            id++
+          }
+        })
+      });
+    })
   }
 
   toggleProjects(idCard): void {
@@ -74,13 +98,21 @@ export class CardsComponent implements OnInit {
   }
 
   getDatasets() {
-    this.dataProject.subscribe(data => {
+    this.projectService.getData().subscribe(data => {
         for (let key in data.response) {
           this.datasets.push([{ data: [{ x: Date.now(), y: data.response[key]["cpuUsage"] }], processName: data.response[key]["process"], id: data.response[key]["process"]+"Cpu",  label: 'Cpu usage', lineTension: 0, borderDash: [8, 4] },{ data: [{ x: Date.now(), y: data.response[key]["memoryUsage"] }], processName: data.response[key]["process"], id: data.response[key]["process"]+"Ram", label: 'Ram usage', lineTension: 0, borderDash: [8, 4] }])
         }
       })
-      this.dataProject.forEach(element => {
-      });
       return this.datasets
+  }
+
+  onSubmit(){
+    this.projectService.newProject(this.form.value).subscribe()
+    window.location.reload()
+  }
+
+  onDelele(_id){
+    console.log(_id)
+    this.projectService.deleteProject(_id).subscribe()
   }
 }

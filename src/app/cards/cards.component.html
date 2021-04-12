@@ -1,7 +1,7 @@
 <div class="header">
   <h1>Projects</h1> <button size="md" type="button" mdbBtn color="dark" (click)="basicModal.show()" mdbWavesEffect>New</button>
 </div>
-<mat-accordion *ngFor='let project of projects | async; index as i' class="card">
+<mat-accordion id="{{project._id.$oid}}" *ngFor='let project of projects | async; index as i' class="card">
   <mat-expansion-panel (opened)="projectsStates[i] = 'expanded'"
                       (closed)="projectsStates[i] = 'collapsed'">
     <mat-expansion-panel-header>
@@ -13,14 +13,22 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div *ngIf="projectsStates[i] == 'expanded'" [@bodyExpansion]="projectsStates[i]" class="expandable-content">
-      <div style="width: 500px;">
+      <a href="http://192.168.1.22:8080/?workspace=/home/jaime/.local/share/code-server/User/Workspaces/{{project.workspace}}" target="_blank">Editar</a>
+      <button (click)="onDelele(project._id.$oid)">Delete</button>
+      <div *ngIf="projectsIDs[project.procesName]" style="width: 500px;">
         <canvas
           baseChart
           [chartType]="'line'"
-          [datasets]="datasets[i]"
+          [datasets]="datasets[projectsIDs[project.procesName]]"
           [options]="options">
         </canvas>
+        <div>
+        </div>
+        <div>
+          {{project.ownersNames}}
+        </div>
       </div>
+      <div *ngIf="!projectsIDs[project.procesName]" style="width: 500px;">Proceso parado</div>
   </div>
   </mat-expansion-panel>
 </mat-accordion>
@@ -61,30 +69,35 @@
         <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
           <span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title w-100" id="myModalLabel">New project</h4>
+        <h1 class="modal-title w-100" id="myModalLabel">New project</h1>
       </div>
-      <div class="modal-body">
-        <div class="md-form">
-          <input mdbInput type="text" class="form-control">
-          <label for="form1" class="">Name</label>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <div class="md-form">
+            <input mdbInput type="text" class="form-control" formControlName="name">
+            <label for="form1" >Name</label>
+          </div>
+          <div class="md-form">
+            <input mdbInput type="text" class="form-control" formControlName="procesName">
+            <label for="form1" >Proces name</label>
+          </div>
+          <div class="md-form">
+            <input mdbInput type="text" class="form-control" formControlName="path">
+            <label for="form1" >Path</label>
+          </div>
+          <div class="md-form">
+            <input mdbInput type="text" class="form-control" formControlName="desc">
+            <label for="form1" >Description</label>
+          </div>
+          <div class="md-form">
+            <input mdbInput type="text" class="form-control" formControlName="workspace">
+            <label for="form1" >Workspace name</label>
+          </div>
         </div>
-        <div class="md-form">
-          <input mdbInput type="text" class="form-control">
-          <label for="form1" class="">Path</label>
+        <div class="modal-footer">
+          <button type="submit" mdbBtn color="success" class="relative waves-light" [disabled]="!form.valid" mdbWavesEffect>Create new project</button>
         </div>
-        <div class="md-form">
-          <input mdbInput type="text" class="form-control">
-          <label for="form1" class="">Description</label>
-        </div>
-        <ng-multiselect-dropdown [placeholder]="'Pick code languajes'"
-                                [settings]="dropdownSettings"
-                                [data]="dropdownList"
-                                name="dropList">
-      </ng-multiselect-dropdown>
-      </div>
-      <div class="modal-footer">
-        <button type="button" mdbBtn color="success" class="relative waves-light" mdbWavesEffect>Save changes</button>
-      </div>
+      </form>
     </div>
   </div>
 </div>

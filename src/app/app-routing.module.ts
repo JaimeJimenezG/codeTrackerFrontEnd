@@ -14,12 +14,13 @@ const routes: Routes = [
     component: CardsComponent,
     canActivate: [AuthGuardService] 
   },
-{
-  path: ':id',
-  component: UserComponent,
-  canActivate: [AuthGuardService] 
-},
+  {
+    path: ':id',
+    component: UserComponent,
+    canActivate: [AuthGuardService] 
+  },
   { path: '**', redirectTo: '' }
+  
 ];
 
 @NgModule({
