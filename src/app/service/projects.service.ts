@@ -22,7 +22,9 @@ export class ProjectsService {
       "path": data['path'],
       "procesName": data['procesName'],
       "desc": data['desc'],
-      "workspace": data['workspace']
+      "workspace": data['workspace'],
+      "startCommand": data['startCommand'],
+      "stopCommand": data['stopCommand'],
     }, httpOptions);
   }
 
@@ -38,5 +40,18 @@ export class ProjectsService {
 
   deleteProject(_id): Observable<any> {
     return this.http.delete(QUERYADRESS+'project/'+_id);
+  }
+
+  startProces(command): Observable<any> {
+    console.log(command)
+    return this.http.post(QUERYADRESS+'project/start', {
+      "command": command,
+    }, httpOptions);
+  }
+
+  stopProces(command): Observable<any> {
+    return this.http.post(QUERYADRESS+'project/stop', {
+      "command": command,
+    }, httpOptions);
   }
 }

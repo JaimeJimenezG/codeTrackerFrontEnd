@@ -39,6 +39,8 @@ export class CardsComponent implements OnInit {
     "desc": new FormControl("", Validators.required),
     "procesName": new FormControl("", Validators.required),
     "workspace": new FormControl("", Validators.required),
+    "startCommand": new FormControl("", Validators.required),
+    "stopCommand": new FormControl("", Validators.required),
   });
 
   dropdownList = [];
@@ -112,7 +114,17 @@ export class CardsComponent implements OnInit {
   }
 
   onDelele(_id){
-    console.log(_id)
     this.projectService.deleteProject(_id).subscribe()
+    window.location.reload()
+  }
+  startProces(command) {
+    this.projectService.startProces(command).subscribe(data => {
+      setTimeout(()=>{ this.getIdOfProces() }, 1000)
+    })    
+  }
+
+  stopProces(command, procesName){
+    this.projectService.stopProces(command).subscribe()
+    delete this.projectsIDs[procesName]
   }
 }

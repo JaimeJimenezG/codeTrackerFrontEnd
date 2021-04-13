@@ -13,8 +13,10 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div *ngIf="projectsStates[i] == 'expanded'" [@bodyExpansion]="projectsStates[i]" class="expandable-content">
-      <a href="http://192.168.1.22:8080/?workspace=/home/jaime/.local/share/code-server/User/Workspaces/{{project.workspace}}" target="_blank">Editar</a>
-      <button (click)="onDelele(project._id.$oid)">Delete</button>
+      <a mat-raised-button href="http://192.168.1.22:8080/?workspace=/home/jaime/.local/share/code-server/User/Workspaces/{{project.workspace}}" target="_blank">Open project</a>
+      <button mat-raised-button (click)="onDelele(project._id.$oid)">Delete</button>
+      <button mat-raised-button (click)="startProces(project.startCommand, project.procesName)">Start</button>
+      <button mat-raised-button (click)="stopProces(project.stopCommand, project.procesName, projectsIDs[project.procesName])">Stop</button>
       <div *ngIf="projectsIDs[project.procesName]" style="width: 500px;">
         <canvas
           baseChart
@@ -92,6 +94,14 @@
           <div class="md-form">
             <input mdbInput type="text" class="form-control" formControlName="workspace">
             <label for="form1" >Workspace name</label>
+          </div>
+          <div class="md-form">
+            <input mdbInput type="text" class="form-control" formControlName="startCommand">
+            <label for="form1" >Start command</label>
+          </div>
+          <div class="md-form">
+            <input mdbInput type="text" class="form-control" formControlName="stopCommand">
+            <label for="form1" >Stop command</label>
           </div>
         </div>
         <div class="modal-footer">
